@@ -1,4 +1,4 @@
-# burney86-structure
+# Manuscript: British Library, Burney 86
 
 Information on the organization and structure of the manuscript British Library, Burney 86 (the "Townley Homer").
 
