@@ -31,6 +31,5 @@ We can't save user names and emais on our lab machines, so before you try to com
 1. In VS Code, choose `New Terminal` from the `Terminal` menu
 2. Enter these two commands:
 
-
-    git config user.name "YOUR REAL-WORLD NAME"
-    git config user.email "YOUR EMAIL"
+- `git config user.name "YOUR REAL-WORLD NAME"`
+-  `git config user.email "YOUR EMAIL"`
