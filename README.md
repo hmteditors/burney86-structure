@@ -22,3 +22,15 @@ Here's the app this project will feed into:
 Background information on the manuscript:
 
 - [description (with bibliography)](https://www.bl.uk/manuscripts/FullDisplay.aspx?ref=burney_ms_86) from the British Library
+
+
+## Using `git` in the St. Isidore lab
+
+We can't save user names and emais on our lab machines, so before you try to commit and push, be sure to configure git for your session:
+
+1. In VS Code, choose `New Terminal` from the `Terminal` menu
+2. Enter these two commands:
+
+
+    git config user.name "YOUR REAL-WORLD NAME"
+    git config user.email "YOUR EMAIL"
