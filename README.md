@@ -18,3 +18,7 @@ Here's the app this project will feed into:
 
 - HMT [index of *Iliad* lines to MSS](https://www.homermultitext.org/iliad-browser/)
 
+
+Background information on the manuscript:
+
+- [description (with bibliography)](https://www.bl.uk/manuscripts/FullDisplay.aspx?ref=burney_ms_86) from the British Library
