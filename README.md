@@ -32,4 +32,12 @@ We can't save user names and emais on our lab machines, so before you try to com
 2. Enter these two commands:
 
 - `git config user.name "YOUR REAL-WORLD NAME"`
--  `git config user.email "YOUR EMAIL"`
+- `git config user.email "YOUR EMAIL"`
+
+
+## Visualizing progress so far
+
+The `dashboard` directory includes an interactive dashboard where you can see our progress so far.  One easy way to run the dashboard:
+
+- in VS Code, open the file `progress.jl`
+- with your mouse anywhere in the open file, hold the option key down and `enter` or `return`. (If you don't like the keyboard you're using, you can also use the VS Code command palette to run `Julia: Execute Code in REPL`)
