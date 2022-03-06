@@ -46,7 +46,7 @@ function paragraphs(burney, escorial)
     burney86trace = scatter(x=burney.book, y=burney.line, mode="markers", 
     name="Burney 86",
     marker=attr(
-        color="CornflowerBlue",
+        color="Dodger",
         size=10,
         opacity=0.5,
         line=attr(
@@ -79,7 +79,11 @@ function paragraphs(burney, escorial)
 
     plotlydata = [burney86trace, e4trace]
 
-    plotlylayout = Layout(;title="Paragraphing in British Library Burney 86 and Escorial Ω 1.12")
+    plotlylayout = Layout(
+        title="Paragraphing in British Library Burney 86 and Escorial Ω 1.12",
+        xaxis_title="Book of the Iliad",
+        yaxis_title="Line"
+        )
 
 
     Plot(plotlydata, plotlylayout)
