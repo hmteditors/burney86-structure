@@ -15,7 +15,7 @@ using Tables
 burneyfile = joinpath(pwd(), "tables", "paragraphs-burney86.cex")
 e4file = joinpath(pwd(), "tables", "paragraphs-e4.cex")
 
-
+"Create a named tuple of integers for book and line."
 function bookline(s::AbstractString)
     try
         (bk,ln) = split(s, ".")
@@ -25,6 +25,8 @@ function bookline(s::AbstractString)
     end
 end
 
+
+"Read file `f` and create a data table of book, line pairs."
 function datafy(f)
     dataurns = readlines(f)[3:end] .|> CtsUrn
     datapairs = []
@@ -39,15 +41,16 @@ end
 burney86 = datafy(burneyfile)
 e4 = datafy(e4file)
 
-
-function progressgraph(burney, escorial)
+"Plot progress in recording paragraph openings."
+function paragraphs(burney, escorial)
     burney86trace = scatter(x=burney.book, y=burney.line, mode="markers", 
     name="Burney 86",
     marker=attr(
-        color="rgba(135, 206, 250, 0.5)",
+        color="CornflowerBlue",
         size=10,
+        opacity=0.5,
         line=attr(
-            color="MediumPurple",
+            color="Navy",
             width=2
         )
 
@@ -58,7 +61,14 @@ function progressgraph(burney, escorial)
     e4trace = scatter(x=escorial.book, y=escorial.line, mode="markers", 
     name="Ω 1.12",
     marker=attr(
-        size="6"
+        color="Orange",
+        size="6",
+        opacity=0.5,
+        symbol="circle-dot",
+        line=attr(
+            color="DarkOrange",
+            width=2
+        )
     ))
     
     #burney86trace["marker"] = Dict(:size => 14,
@@ -80,9 +90,11 @@ app = dash(assets_folder = assets)
 
 app.layout = html_div() do
     dcc_markdown("*Dashboard version*: **$(DASHBOARD_VERSION)**"),
-
     html_h1("Progress in Burney 86 analyses"),
-    dcc_graph(figure = progressgraph(burney86, e4))
+    dcc_markdown("""Mouse over the graph to get tools for panning,
+    zooming and selecting parts of the graph.
+    """),
+    dcc_graph(figure = paragraphs(burney86, e4))
 end
 
 run_server(app, "0.0.0.0", debug=true)
