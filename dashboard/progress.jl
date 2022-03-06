@@ -8,10 +8,22 @@ dses = fromcex(src, TextOnPage)
 # peek at dse[n].data[1][1] to get text catalog data
 cat = fromcex(src, TextCatalogCollection)
 
-
-matches = filter(cat.entries) do e
-    urn(e) == CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msB:")
+for dse in dses
+    # peek at data:
+    workurn = dse.data[1][1] |> droppassage
+    println(workurn)
+    matches = filter(cat.entries) do e
+        urn(e) == workurn
+        
+    end
+    if isempty(matches)
+        println("EMPTY", workurn)
+    else
+        println(titling(matches[1]))
+    end
+    #println(urn(dse), matches |> length)
 end
+
 
 function titling(entry)
     entry.group * ", *" *  entry.work * "* ("  * entry.version * ")"
