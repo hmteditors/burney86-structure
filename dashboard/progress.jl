@@ -1,3 +1,25 @@
+# urn:cite2:hmt:datamodels.v1:textonpage
+#TextOnPage
+#const TEXT_ON_PAGE_MODEL = Cite2Urn("urn:cite2:hmt:datamodels.v1:textonpage")
+
+url = "https://raw.githubusercontent.com/homermultitext/hmt-archive/master/releases-cex/hmt-current.cex"
+src = Downloads.download(url) |> read |> String
+dses = fromcex(src, TextOnPage)
+# peek at dse[n].data[1][1] to get text catalog data
+cat = fromcex(src, TextCatalogCollection)
+
+
+matches = filter(cat.entries) do e
+    urn(e) == CtsUrn("urn:cts:greekLit:tlg0012.tlg001.msB:")
+end
+
+function titling(entry)
+    entry.group * ", *" *  entry.work * "* ("  * entry.version * ")"
+end
+
+
+#
+#
 # Run this dashboard from the root of the
 # github repository:
 using Pkg
@@ -7,7 +29,10 @@ assets = joinpath(pwd(), "dashboard", "assets")
 
 DASHBOARD_VERSION = "0.1"
 
-using CitableText
+using CitableBase, CitableText, CitableObject
+using CitableCorpus
+using CitableAnnotations
+using Downloads
 using PlotlyJS
 using Dash
 using Tables
@@ -24,7 +49,6 @@ function bookline(s::AbstractString)
         throw(ArgumentError("Failed to parse string $(s)"))
     end
 end
-
 
 "Read file `f` and create a data table of book, line pairs."
 function datafy(f)
