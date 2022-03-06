@@ -41,3 +41,7 @@ The `dashboard` directory includes an interactive dashboard where you can see ou
 
 - in VS Code, open the file `progress.jl`
 - with your mouse anywhere in the open file, hold the option key down and `enter` or `return`. (If you don't like the keyboard you're using, you can also use the VS Code command palette to run `Julia: Execute Code in REPL`)
+
+It will looking something like this.
+
+![progress chart](./paras.png)
