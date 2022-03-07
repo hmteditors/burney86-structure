@@ -22,8 +22,8 @@ using Dash
 
 """Compose markdown-formatted title for text catalog entry.
 """
-function mdtitle(entry)
-    entry.group * ", *" *  entry.work * "* ("  * entry.version * ")"
+function formattitle(entry)
+    entry.group * ", " *  entry.work * " ("  * entry.version * ")"
 end
 
 """Download current HMT release  from `url`."""
@@ -39,7 +39,7 @@ function hmtdata(url)
     for dse in dses
         workurn =  dse.data[1][1] |> droppassage |> string
         catentry = filter(e -> string(e.urn) == workurn, cat.entries)[1]
-        push!(titlelist, mdtitle(catentry))
+        push!(titlelist, formattitle(catentry))
         pagecounts = []
 
         currentbk = ""
@@ -143,7 +143,7 @@ function pageindexing(tbls, titles)
         push!(plotlydata, tbltrace)
     end
     plotlylayout = Layout(
-        title="Pages per book of the Iliad",
+        title="MS pages per book of the Iliad",
         xaxis_title="Book of the Iliad",
         yaxis_title="Number of MS pages"
         )
