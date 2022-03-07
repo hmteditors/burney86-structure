@@ -2,30 +2,82 @@
 #TextOnPage
 #const TEXT_ON_PAGE_MODEL = Cite2Urn("urn:cite2:hmt:datamodels.v1:textonpage")
 
-url = "https://raw.githubusercontent.com/homermultitext/hmt-archive/master/releases-cex/hmt-current.cex"
-src = Downloads.download(url) |> read |> String
-dses = fromcex(src, TextOnPage)
-# peek at dse[n].data[1][1] to get text catalog data
-cat = fromcex(src, TextCatalogCollection)
+dataurl = "https://raw.githubusercontent.com/homermultitext/hmt-archive/master/releases-cex/hmt-current.cex"
 
-for dse in dses
-    # peek at data:
-    workurn = dse.data[1][1] |> droppassage
-    println(workurn)
-    matches = filter(cat.entries) do e
-        urn(e) == workurn
-        
+
+
+using CitableBase, CitableObject, CitableText
+using CitablePhysicalText, CitableCorpus
+using CitableAnnotations
+using SplitApplyCombine
+using Tables
+using Downloads
+
+"""Download current HMT release  from `url`."""
+function hmtdata(url)
+    src = Downloads.download(url) |> read |> String
+    cat = fromcex(src, TextCatalogCollection)
+    dses = fromcex(src, TextOnPage)
+    #=
+    dsetitles = []
+    for dse in dses
+        # peek at data to get a collection URN:
+        workurn = dse.data[1][1] |> droppassage
+        @debug("Peek at URN", workurn)
+        matches = filter(cat.entries) do e
+            urn(e) == workurn
+            
+        end
+        if isempty(matches)
+            @warn("No entry in text catalog for ", workurn)
+        else
+            #println(mdtitle(matches[1]))
+            push!(dsetitles, matches[1])
+        end
     end
-    if isempty(matches)
-        println("EMPTY", workurn)
+=#
+# THIS:
+# t = map(pr -> (collapsePassageTo(pr[1],1) |> passagecomponent, pr[2]), dse.data) |> Tables.columntable
+
+
+pagecounts = Dict{String, Int64}()
+
+currentbk = ""
+currentcount = 0
+for pr in dse.data
+    
+    bk = collapsePassageTo(pr[1], 1) |> passagecomponent
+    if bk != currentbk
+        if currentcount > 0
+            pagecounts[currentbk] = currentcount
+            #println("FOR $(currentbk): $(currentcount)")
+        end
+        currentbk = bk
     else
-        println(titling(matches[1]))
+        currentcount += 1
     end
-    #println(urn(dse), matches |> length)
+    pagecounts
 end
 
 
-function titling(entry)
+#=
+    pagelist = []
+    
+    bkpairs = map(d1.data) do pr
+        (collapsePassageTo(pr[1],1), pr[2])
+    end
+
+    for pr in bkpairs
+
+=#
+    (dses, cat)
+end
+
+(dsecollections, textcatalog) = hmtdata(dataurl)
+
+"""Compose markdown-formatted title for text catalog entry.
+"""
+function mdtitle(entry)
     entry.group * ", *" *  entry.work * "* ("  * entry.version * ")"
 end
 
@@ -39,7 +91,7 @@ Pkg.activate(joinpath(pwd(), "dashboard"))
 Pkg.instantiate()
 assets = joinpath(pwd(), "dashboard", "assets")
 
-DASHBOARD_VERSION = "0.1"
+DASHBOARD_VERSION = "0.2"
 
 using CitableBase, CitableText, CitableObject
 using CitableCorpus
@@ -67,7 +119,7 @@ function datafy(f)
     dataurns = readlines(f)[3:end] .|> CtsUrn
     datapairs = []
     for u in dataurns
-        if isrange(u)
+        if CitableText.isrange(u)
             push!(datapairs, range_end(u) |> bookline)
         end
     end
@@ -125,16 +177,28 @@ function paragraphs(burney, escorial)
     Plot(plotlydata, plotlylayout)
 end
 
+function pageindexing()
+end
 
 app = dash(assets_folder = assets)
 
 app.layout = html_div() do
     dcc_markdown("*Dashboard version*: **$(DASHBOARD_VERSION)**"),
     html_h1("Progress in Burney 86 analyses"),
-    dcc_markdown("""Mouse over the graph to get tools for panning,
+    dcc_markdown("""## Indexing paragraph units in *Iliad* text
+     
+    Mouse over the graph to get tools for panning,
     zooming and selecting parts of the graph.
     """),
-    dcc_graph(figure = paragraphs(burney86, e4))
+    dcc_graph(figure = paragraphs(burney86, e4)),
+
+    dcc_markdown("""## Indexing *Iliad* to MS pages
+     
+    Mouse over the graph to get tools for panning,
+    zooming and selecting parts of the graph.
+    """)#,
+
+    #dcc_graph(figure = pageindexing())
 end
 
 run_server(app, "0.0.0.0", debug=true)
