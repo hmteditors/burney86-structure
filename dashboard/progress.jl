@@ -1,88 +1,3 @@
-# urn:cite2:hmt:datamodels.v1:textonpage
-#TextOnPage
-#const TEXT_ON_PAGE_MODEL = Cite2Urn("urn:cite2:hmt:datamodels.v1:textonpage")
-
-dataurl = "https://raw.githubusercontent.com/homermultitext/hmt-archive/master/releases-cex/hmt-current.cex"
-
-
-
-using CitableBase, CitableObject, CitableText
-using CitablePhysicalText, CitableCorpus
-using CitableAnnotations
-using SplitApplyCombine
-using Tables
-using Downloads
-
-"""Download current HMT release  from `url`."""
-function hmtdata(url)
-    src = Downloads.download(url) |> read |> String
-    cat = fromcex(src, TextCatalogCollection)
-    dses = fromcex(src, TextOnPage)
-    #=
-    dsetitles = []
-    for dse in dses
-        # peek at data to get a collection URN:
-        workurn = dse.data[1][1] |> droppassage
-        @debug("Peek at URN", workurn)
-        matches = filter(cat.entries) do e
-            urn(e) == workurn
-            
-        end
-        if isempty(matches)
-            @warn("No entry in text catalog for ", workurn)
-        else
-            #println(mdtitle(matches[1]))
-            push!(dsetitles, matches[1])
-        end
-    end
-=#
-# THIS:
-# t = map(pr -> (collapsePassageTo(pr[1],1) |> passagecomponent, pr[2]), dse.data) |> Tables.columntable
-
-
-pagecounts = Dict{String, Int64}()
-
-currentbk = ""
-currentcount = 0
-for pr in dse.data
-    
-    bk = collapsePassageTo(pr[1], 1) |> passagecomponent
-    if bk != currentbk
-        if currentcount > 0
-            pagecounts[currentbk] = currentcount
-            #println("FOR $(currentbk): $(currentcount)")
-        end
-        currentbk = bk
-    else
-        currentcount += 1
-    end
-    pagecounts
-end
-
-
-#=
-    pagelist = []
-    
-    bkpairs = map(d1.data) do pr
-        (collapsePassageTo(pr[1],1), pr[2])
-    end
-
-    for pr in bkpairs
-
-=#
-    (dses, cat)
-end
-
-(dsecollections, textcatalog) = hmtdata(dataurl)
-
-"""Compose markdown-formatted title for text catalog entry.
-"""
-function mdtitle(entry)
-    entry.group * ", *" *  entry.work * "* ("  * entry.version * ")"
-end
-
-
-#
 #
 # Run this dashboard from the root of the
 # github repository:
@@ -91,15 +6,64 @@ Pkg.activate(joinpath(pwd(), "dashboard"))
 Pkg.instantiate()
 assets = joinpath(pwd(), "dashboard", "assets")
 
+
+dataurl = "https://raw.githubusercontent.com/homermultitext/hmt-archive/master/releases-cex/hmt-current.cex"
+
 DASHBOARD_VERSION = "0.2"
 
 using CitableBase, CitableText, CitableObject
-using CitableCorpus
+using CitablePhysicalText, CitableCorpus
 using CitableAnnotations
+
 using Downloads
 using PlotlyJS
-using Dash
 using Tables
+using Dash
+
+"""Compose markdown-formatted title for text catalog entry.
+"""
+function mdtitle(entry)
+    entry.group * ", *" *  entry.work * "* ("  * entry.version * ")"
+end
+
+"""Download current HMT release  from `url`."""
+function hmtdata(url)
+    src = Downloads.download(url) |> read |> String
+    cat = fromcex(src, TextCatalogCollection)
+    dses = fromcex(src, TextOnPage)
+ 
+    keylist = 1:24 |> collect .|> string
+
+    countsbybook = []
+    titlelist = []
+    for dse in dses
+        workurn =  dse.data[1][1] |> droppassage |> string
+        catentry = filter(e -> string(e.urn) == workurn, cat.entries)[1]
+        push!(titlelist, mdtitle(catentry))
+        pagecounts = Dict{String, Int64}()
+
+        currentbk = ""
+        currentcount = 0
+        for pr in dse.data
+            bk = collapsePassageTo(pr[1], 1) |> passagecomponent
+            if bk != currentbk
+                if currentcount > 0
+                    pagecounts[currentbk] = currentcount
+                    currentcount = 1
+                end
+                currentbk = bk
+            else
+                currentcount += 1
+            end
+        end
+        push!(countsbybook, pagecounts)
+    end
+    
+    (countsbybook, titlelist)
+end
+
+(countsbybook, titles) = hmtdata(dataurl)
+
 
 burneyfile = joinpath(pwd(), "tables", "paragraphs-burney86.cex")
 e4file = joinpath(pwd(), "tables", "paragraphs-e4.cex")
