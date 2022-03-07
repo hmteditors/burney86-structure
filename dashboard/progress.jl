@@ -32,7 +32,7 @@ function hmtdata(url)
     cat = fromcex(src, TextCatalogCollection)
     dses = fromcex(src, TextOnPage)
  
-    keylist = 1:24 |> collect .|> string
+    #keylist = 1:24 |> collect .|> string
 
     countsbybook = []
     titlelist = []
@@ -40,23 +40,27 @@ function hmtdata(url)
         workurn =  dse.data[1][1] |> droppassage |> string
         catentry = filter(e -> string(e.urn) == workurn, cat.entries)[1]
         push!(titlelist, mdtitle(catentry))
-        pagecounts = Dict{String, Int64}()
+        pagecounts = []
 
         currentbk = ""
+        currentpage = ""
         currentcount = 0
         for pr in dse.data
             bk = collapsePassageTo(pr[1], 1) |> passagecomponent
+            pg = pr[2] |> objectcomponent
             if bk != currentbk
                 if currentcount > 0
-                    pagecounts[currentbk] = currentcount
-                    currentcount = 1
+                    #pagecounts[currentbk] = currentcount
+                    push!(pagecounts, (bk = currentbk, count = currentcount))
                 end
                 currentbk = bk
-            else
+                currentpage = pg
+                currentcount = 1
+            elseif currentpage != pg
                 currentcount += 1
             end
         end
-        push!(countsbybook, pagecounts)
+        push!(countsbybook, Tables.columntable(pagecounts))
     end
     
     (countsbybook, titlelist)
@@ -108,8 +112,6 @@ function paragraphs(burney, escorial)
 
     ))
     
-    
-    
     e4trace = scatter(x=escorial.book, y=escorial.line, mode="markers", 
     name="Ω 1.12",
     marker=attr(
@@ -122,26 +124,32 @@ function paragraphs(burney, escorial)
             width=2
         )
     ))
-    
-    #burney86trace["marker"] = Dict(:size => 14,
-    #:symbol => "circle-dot")
-
-    #e4trace["marker"] = Dict(:size => 8)
-    
-
     plotlydata = [burney86trace, e4trace]
-
     plotlylayout = Layout(
         title="Paragraphing in British Library Burney 86 and Escorial Ω 1.12",
         xaxis_title="Book of the Iliad",
         yaxis_title="Line"
         )
 
-
     Plot(plotlydata, plotlylayout)
 end
 
-function pageindexing()
+function pageindexing(tbls, titles)
+    plotlydata = GenericTrace{Dict{Symbol, Any}}[]
+    for (i, tbl) in enumerate(tbls)
+        tbltrace = bar(x=tbl.bk, y=tbl.count, 
+        name=titles[i]
+        )
+        push!(plotlydata, tbltrace)
+    end
+    plotlylayout = Layout(
+        title="Pages per book of the Iliad",
+        xaxis_title="Book of the Iliad",
+        yaxis_title="Number of MS pages"
+        )
+
+    Plot(plotlydata, plotlylayout)
+
 end
 
 app = dash(assets_folder = assets)
@@ -160,9 +168,9 @@ app.layout = html_div() do
      
     Mouse over the graph to get tools for panning,
     zooming and selecting parts of the graph.
-    """)#,
+    """),
 
-    #dcc_graph(figure = pageindexing())
+    dcc_graph(figure = pageindexing(countsbybook, titles))
 end
 
 run_server(app, "0.0.0.0", debug=true)
