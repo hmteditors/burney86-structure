@@ -6,11 +6,9 @@ Pkg.activate(joinpath(pwd(), "dashboard"))
 Pkg.instantiate()
 assets = joinpath(pwd(), "dashboard", "assets")
 
+DASHBOARD_VERSION = "0.3"
 
-dataurl = "https://raw.githubusercontent.com/homermultitext/hmt-archive/master/releases-cex/hmt-current.cex"
-
-DASHBOARD_VERSION = "0.2"
-
+using HmtArchive, HmtArchive.Analysis
 using CitableBase, CitableText, CitableObject
 using CitablePhysicalText, CitableCorpus
 using CitableAnnotations
@@ -27,47 +25,13 @@ function formattitle(entry)
 end
 
 """Download current HMT release  from `url`."""
-function hmtdata(url)
-    src = Downloads.download(url) |> read |> String
-    cat = fromcex(src, TextCatalogCollection)
-    dses = fromcex(src, TextOnPage)
- 
-    #keylist = 1:24 |> collect .|> string
-
-    countsbybook = []
-    titlelist = []
-    for dse in dses
-        workurn =  dse.data[1][1] |> droppassage |> string
-        catentry = filter(e -> string(e.urn) == workurn, cat.entries)[1]
-        push!(titlelist, formattitle(catentry))
-        pagecounts = []
-
-        currentbk = ""
-        currentpage = ""
-        currentcount = 0
-        for pr in dse.data
-            bk = collapsePassageTo(pr[1], 1) |> passagecomponent
-            pg = pr[2] |> objectcomponent
-            if bk != currentbk
-                if currentcount > 0
-                    #pagecounts[currentbk] = currentcount
-                    push!(pagecounts, (bk = currentbk, count = currentcount))
-                end
-                currentbk = bk
-                currentpage = pg
-                currentcount = 1
-            elseif currentpage != pg
-                currentcount += 1
-            end
-        end
-        push!(countsbybook, Tables.columntable(pagecounts))
-    end
-    
-    (countsbybook, titlelist)
+function hmtdata()
+    src = hmt_cex()    
+    coltblv_indexedimagesbybook(src)
 end
 
-(countsbybook, titles) = hmtdata(dataurl)
 
+(titles, countsbybook) = hmtdata()
 
 burneyfile = joinpath(pwd(), "tables", "paragraphs-burney86.cex")
 e4file = joinpath(pwd(), "tables", "paragraphs-e4.cex")
@@ -97,7 +61,8 @@ end
 burney86 = datafy(burneyfile)
 e4 = datafy(e4file)
 
-"Plot progress in recording paragraph openings."
+"""Plot progress in recording paragraph openings.
+"""
 function paragraphs(burney, escorial)
     burney86trace = scatter(x=burney.book, y=burney.line, mode="markers", 
     name="Burney 86",
@@ -134,10 +99,12 @@ function paragraphs(burney, escorial)
     Plot(plotlydata, plotlylayout)
 end
 
+"""Compose a plot of pages per book of the Iliad for each MS.
+"""
 function pageindexing(tbls, titles)
     plotlydata = GenericTrace{Dict{Symbol, Any}}[]
     for (i, tbl) in enumerate(tbls)
-        tbltrace = bar(x=tbl.bk, y=tbl.count, 
+        tbltrace = bar(x=tbl.book, y=tbl.count, 
         name=titles[i]
         )
         push!(plotlydata, tbltrace)
@@ -149,7 +116,6 @@ function pageindexing(tbls, titles)
         )
 
     Plot(plotlydata, plotlylayout)
-
 end
 
 app = dash(assets_folder = assets)
