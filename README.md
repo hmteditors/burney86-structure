@@ -23,6 +23,9 @@ Background information on the manuscript:
 
 - [description (with bibliography)](https://www.bl.uk/manuscripts/FullDisplay.aspx?ref=burney_ms_86) from the British Library
 
+## Paleographic guide
+
+See the [project wiki](https://github.com/hmteditors/burney86-structure/wiki/Paleographic-guide).
 
 ## Using `git` in the St. Isidore lab
 
