@@ -4,6 +4,16 @@
 using Markdown
 using InteractiveUtils
 
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
+        el
+    end
+end
+
 # ╔═╡ 72f848d8-b445-4667-a627-4980cc111876
 begin
 	using CitableObject
@@ -19,6 +29,12 @@ md"""
 > Visualize tables of observations in the `paleography` folder of this repository.
 """
 
+# ╔═╡ 3c7dc4f4-28c2-402a-b190-d8300bc1abd0
+@bind fetch Button("Reload data")
+
+# ╔═╡ e0b65c65-4754-469f-9702-b34d8786bb7f
+md"*Height of images*: $(@bind imght Slider(20:50, default=30))"
+
 # ╔═╡ 3fbfa6b8-2e9f-4644-81a8-cec7e5acb4ad
 html"""
 <br/><br/><br/><br/><br/><br/>
@@ -31,7 +47,7 @@ md"> Configuration stuff below here you can ignore"
 f = joinpath("..", "paleography", "burney86.cex")
 
 # ╔═╡ b7fe5a11-5aba-4ae2-8692-441ebaaac9b5
-	lines = filter(l -> ! isempty(l), readlines(f))
+lines = filter(l -> ! isempty(l), readlines(f))
 
 # ╔═╡ e60ecbe8-3661-4e81-a92a-b74b162d01ec
 baseurl = "http://www.homermultitext.org/iipsrv";
@@ -67,7 +83,8 @@ end;
 
 # ╔═╡ 357977cb-140d-4a49-a4a0-898af5ebe96d
 begin
-	"## Paleographic observations\n\n" * tabulate(f, 200) |> Markdown.parse
+	fetch
+	"## Paleographic observations\n\n" * tabulate(f, imght) |> Markdown.parse
 end
 
 
@@ -91,7 +108,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.1"
 manifest_format = "2.0"
-project_hash = "f4257d69534c4c9a42983593aebb7a734d273112"
+project_hash = "b58210798140668cf7039c8fb0483761eedb77f6"
 
 [[deps.ANSIColoredPrinters]]
 git-tree-sha1 = "574baf8110975760d391c710b6341da1afa48d8c"
@@ -1154,11 +1171,13 @@ version = "17.4.0+0"
 # ╔═╡ Cell order:
 # ╟─72f848d8-b445-4667-a627-4980cc111876
 # ╟─8d8783c0-5172-11ed-242f-c32bfbe76c95
+# ╟─3c7dc4f4-28c2-402a-b190-d8300bc1abd0
+# ╟─e0b65c65-4754-469f-9702-b34d8786bb7f
 # ╟─357977cb-140d-4a49-a4a0-898af5ebe96d
 # ╟─3fbfa6b8-2e9f-4644-81a8-cec7e5acb4ad
 # ╟─d3f3fb12-8908-4966-b71c-e7875fab5f22
-# ╠═6a475eb8-514f-4bcf-88c4-8d203b7a9142
-# ╠═b7fe5a11-5aba-4ae2-8692-441ebaaac9b5
+# ╟─6a475eb8-514f-4bcf-88c4-8d203b7a9142
+# ╟─b7fe5a11-5aba-4ae2-8692-441ebaaac9b5
 # ╟─45a55737-a345-43d8-9f48-2f9b70a7fd8a
 # ╟─e60ecbe8-3661-4e81-a92a-b74b162d01ec
 # ╟─75493cf7-0853-4f39-8316-e8ea8aed7621
