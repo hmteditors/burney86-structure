@@ -2,6 +2,13 @@
 
 Information on the organization and structure of the manuscript British Library, Burney 86 (the "Townley Homer").
 
+
+## In-progress guide to paleography of Burney 86
+
+- on line [here](https://github.com/hmteditors/burney86-structure/blob/main/paleography-guide.md), built from source file in `paleography-guide/source.md`
+
+
+
 ## Quick reference
 
 URNs used in tables here:
