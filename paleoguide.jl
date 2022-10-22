@@ -14,14 +14,18 @@ service = IIIFservice(baseurl, root)
 function tabulate(srclines, ht = 30)
 	lines = filter(l -> ! isempty(l), srclines)
     tbllines = [
-        "| Image | Transcription |",
-        "| --- | --- | "
+        "| Image | Transcription | Notes |",
+        "| --- | --- | --- |"
     ]
     for ln in lines[2:end]
         cols = split(ln, "|")
-        img = Cite2Urn(cols[2])
-        mdImage = linkedMarkdownImage(ict,img, service; ht = ht)
-        push!(tbllines, "| $(mdImage) | $(cols[3]) |")
+        if isempty(cols[2])
+            push!(tbllines, "|  |  | $(cols[4]) |")
+        else
+            img = Cite2Urn(cols[2])
+            mdImage = linkedMarkdownImage(ict,img, service; ht = ht)
+            push!(tbllines, "| $(mdImage) | $(cols[3]) | $(cols[4]) |")
+        end
     end
     join(tbllines, "\n")
 end
