@@ -33,7 +33,7 @@ function tabulate(srclines, ht = 30)
 end
 
 
-function writefile()
+function writefile(imght = 40)
 
     pagelines = []
     tablelines = []
@@ -42,7 +42,7 @@ function writefile()
         if startswith(ln, "```paleography")
             intable = true
         elseif intable && startswith(ln, "```")
-            push!(pagelines, tabulate(tablelines))
+            push!(pagelines, tabulate(tablelines, imght))
             intable = false
             tablelines = []
         else
@@ -54,4 +54,4 @@ function writefile()
     end
 end
 
-writefile()
+writefile(40)
