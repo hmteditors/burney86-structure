@@ -1,3 +1,5 @@
+using Pkg
+Pkg.activate(".")
 using CitableImage
 using CitableObject
 
@@ -31,21 +33,25 @@ function tabulate(srclines, ht = 30)
 end
 
 
-pagelines = []
-tablelines = []
-intable = false
-for ln in lines
-    if startswith(ln, "```paleography")
-        intable = true
-    elseif intable && startswith(ln, "```")
-        push!(pagelines, tabulate(tablelines))
-        intable = false
-        tablelines = []
-    else
-        intable ? push!(tablelines, ln) : push!(pagelines, ln)
+function writefile()
+
+    pagelines = []
+    tablelines = []
+    intable = false
+    for ln in lines
+        if startswith(ln, "```paleography")
+            intable = true
+        elseif intable && startswith(ln, "```")
+            push!(pagelines, tabulate(tablelines))
+            intable = false
+            tablelines = []
+        else
+            intable ? push!(tablelines, ln) : push!(pagelines, ln)
+        end
+    end
+    open(joinpath(pwd(), "paleography-guide.md"), "w") do io
+        write(io, join(pagelines,"\n"))
     end
 end
 
-open(joinpath(pwd(), "paleography-guide.md"), "w") do io
-    write(io, join(pagelines,"\n"))
-end
+writefile()
