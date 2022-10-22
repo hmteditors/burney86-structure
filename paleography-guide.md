@@ -90,6 +90,7 @@ Numbers are distinguished from text with a special marker.
 
 Beginning and ending of word with prominent bar above.
 
+> **Link needs updating with proper reference.**
 
 ![](https://www.homermultitext.org/iipsrv?OBJ=IIP,1.0&FIF=/project/homer/pyramidal/deepzoom/citebl/burney86imgs/v1/burney_ms_86_f028v.tif&RGN=0.9111,0.6586,0.03322,0.01396&wID=250&CVT=JPEG) οὐνόν  for οὐρανόν
 
