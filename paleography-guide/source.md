@@ -3,6 +3,9 @@
 
 > *The illustrations below are linked to zoomable images where you can read them in context.*
 
+
+## Contents
+
 1. [Individual letters](#individual-letters)
 1. [Word terminations](#letter-combinations)
 1. [Letter combinations](#letter-combinations)

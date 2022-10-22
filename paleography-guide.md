@@ -3,6 +3,9 @@
 
 > *The illustrations below are linked to zoomable images where you can read them in context.*
 
+
+## Contents
+
 1. [Individual letters](#individual-letters)
 1. [Word terminations](#letter-combinations)
 1. [Letter combinations](#letter-combinations)
@@ -57,7 +60,7 @@
 
 Letters or groups of letters at the ends of words often have a very terse cursive form.
 
-> ⚠️ **Note that we transcribe these as alternate letter forms, not as abbreviations!**
+> ⚠️ *Note that we transcribe these as alternate letter forms, not as abbreviations!*
 
 ## Numbers
 
@@ -78,3 +81,21 @@ Numbers are distinguished from text with a special marker.
 - The text of scholia could also include numeric values?  Do we ever see 90?
 
 ## Ancient markup
+
+
+
+
+
+### Abbreviations
+
+Beginning and ending of word with prominent bar above.
+
+
+![](https://www.homermultitext.org/iipsrv?OBJ=IIP,1.0&FIF=/project/homer/pyramidal/deepzoom/citebl/burney86imgs/v1/burney_ms_86_f028v.tif&RGN=0.9111,0.6586,0.03322,0.01396&wID=250&CVT=JPEG) οὐνόν  for οὐρανόν
+
+
+### Literal string marker
+
+### Hyphen (ὑφ‘ ἕν)
+
+### Footnote dingbats
