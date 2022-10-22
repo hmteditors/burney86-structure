@@ -19,7 +19,9 @@
 | [![image)](http://www.homermultitext.org/iipsrv?IIIF=/project/homer/pyramidal/deepzoom/citebl/burney86imgs/v1/burney_ms_86_f028v.tif/pct:37.66,61.28,1.1,1.62/30,/0/default.jpg)](http://www.homermultitext.org/ict2/?urn=urn:cite2:citebl:burney86imgs.v1:burney_ms_86_f028v@0.3766,0.6128,0.01100,0.01620) | δ | Cursive form. |
 |  |  | **epsilon** |
 |  |  | **zeta** |
+| [![image)](http://www.homermultitext.org/iipsrv?IIIF=/project/homer/pyramidal/deepzoom/citebl/burney86imgs/v1/burney_ms_86_f028v.tif/pct:47.91,61.54,1.848,1.947/30,/0/default.jpg)](http://www.homermultitext.org/ict2/?urn=urn:cite2:citebl:burney86imgs.v1:burney_ms_86_f028v@0.4791,0.6154,0.01848,0.01947) | ζ | Cursive form. |
 |  |  | **eta** |
+| [![image)](http://www.homermultitext.org/iipsrv?IIIF=/project/homer/pyramidal/deepzoom/citebl/burney86imgs/v1/burney_ms_86_f028v.tif/pct:56.14,61.49,1.76,1.396/30,/0/default.jpg)](http://www.homermultitext.org/ict2/?urn=urn:cite2:citebl:burney86imgs.v1:burney_ms_86_f028v@0.5614,0.6149,0.01760,0.01396) | η | Eta normally starts with a high vertical hasta (above the middle guide line). Like this example, it is not always rounded like modern printed forms. |
 |  |  | **theta** |
 |  |  | **iota** |
 | [![image)](http://www.homermultitext.org/iipsrv?IIIF=/project/homer/pyramidal/deepzoom/citebl/burney86imgs/v1/burney_ms_86_f028v.tif/pct:36.71,61.69,0.704,1.086/30,/0/default.jpg)](http://www.homermultitext.org/ict2/?urn=urn:cite2:citebl:burney86imgs.v1:burney_ms_86_f028v@0.3671,0.6169,0.007039,0.01086) | ι | Starts at middle guide line, ends at lower guide line  |
